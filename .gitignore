@@ -1,6 +1,8 @@
 
 .DS_Store
 .idea
+.private
+.ipynb_checkpoints
 *.tfstate
 *.tfstate.*
 **.terraform

@@ -1,0 +1,36 @@
+Q3:
+
+SELECT count(*) FROM yellow_taxi_data WHERE CAST(tpep_pickup_datetime AS date) = '2021-01-15'
+
+Q4:
+
+SELECT 
+	count(*),
+	CAST(tpep_pickup_datetime AS date) AS dayy, 
+	MAX(tip_amount) AS max_tip
+FROM yellow_taxi_data 
+GROUP BY dayy
+ORDER BY max_tip DESC
+LIMIT 1
+	
+Q5:
+SELECT 
+	count(*) AS n,
+	"DOLocationID"
+FROM yellow_taxi_data
+GROUP BY "DOLocationID"
+ORDER BY n DESC
+LIMIT 1
+
+Q6:
+
+SELECT 
+	AVG(total_amount) AS average_price,
+	"PULocationID",
+	"DOLocationID"
+FROM yellow_taxi_data
+GROUP BY "DOLocationID", "PULocationID"
+ORDER BY average_price DESC
+LIMIT 10
+
+(No time for importing taxi-zone-lookup to postgres)
