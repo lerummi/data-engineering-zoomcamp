@@ -12,3 +12,5 @@
 **.env
 **__pycache__/
 week_1_basics_n_setup/2_docker_sql/gpc_environment_setup
+.history
+**/ny_taxi_postgres_data/*
