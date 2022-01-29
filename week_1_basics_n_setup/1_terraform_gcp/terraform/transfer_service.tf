@@ -8,7 +8,7 @@ data "google_storage_transfer_project_service_account" "default" {
 }
 
 resource "google_storage_bucket" "transfer-service-terraform" {
-  name          = "transfer-service-terraform"
+  name          = "transfer-service-terraform-river"
   storage_class = "STANDARD"
   project       = var.project
   location      = "EU"
@@ -31,7 +31,7 @@ resource "google_storage_transfer_job" "s3-bucket-nightly-backup2" {
     }
     aws_s3_data_source {
       bucket_name = "nyc-tlc"
-      aws_access_key {
+      aws_access_key {  
         access_key_id     = var.access_key_id
         secret_access_key = var.aws_secret_key
       }
@@ -46,12 +46,12 @@ resource "google_storage_transfer_job" "s3-bucket-nightly-backup2" {
     schedule_start_date {
       year  = 2022
       month = 01
-      day   = 21
+      day   = 27
     }
     schedule_end_date {
       year  = 2022
       month = 01
-      day   = 21
+      day   = 27
     }
   }
 
