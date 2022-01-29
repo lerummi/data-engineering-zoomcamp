@@ -13,3 +13,4 @@
 **__pycache__/
 .history
 **/ny_taxi_postgres_data/*
+.vscode
