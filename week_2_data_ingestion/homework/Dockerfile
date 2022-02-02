@@ -5,21 +5,24 @@ FROM apache/airflow:2.2.3
 ENV AIRFLOW_HOME=/opt/airflow
 
 USER root
-RUN apt-get update -qq && apt-get install vim -qqq
 # git gcc g++ -qqq
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN apt-get update \
+  && apt-get install vim -qqq \
+  && apt-get autoremove -yqq --purge \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/* 
+
+COPY .env $AIRFLOW_HOME
 
 # Ref: https://airflow.apache.org/docs/docker-stack/recipes.html
 
 SHELL ["/bin/bash", "-o", "pipefail", "-e", "-u", "-x", "-c"]
 
-ARG CLOUD_SDK_VERSION=322.0.0
+ARG CLOUD_SDK_VERSION=370.0.0
 ENV GCLOUD_HOME=/home/google-cloud-sdk
 
 ENV PATH="${GCLOUD_HOME}/bin/:${PATH}"
-ENV PYTHONPATH="${AIRFLOW_HOME}:${PYTHONPATH}"
 
 RUN DOWNLOAD_URL="https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz" \
     && TMP_DIR="$(mktemp -d)" \
@@ -33,6 +36,9 @@ RUN DOWNLOAD_URL="https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/goo
        --quiet \
     && rm -rf "${TMP_DIR}" \
     && gcloud --version
+
+COPY scripts $AIRFLOW_HOME/scripts
+RUN chmod +x $AIRFLOW_HOME/scripts
 
 WORKDIR $AIRFLOW_HOME
 
