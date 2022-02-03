@@ -15,14 +15,14 @@ from functions import (
 default_args = {
     "owner": "airflow",
     "depends_on_past": False,
-    "retries": 1,
-    "start_date": datetime.now(), 
-    "schedule_interval": "@once"
+    "retries": 1
 }
 
 with DAG(
     dag_id="zones_to_gcp",
     default_args=default_args,
+    start_date=datetime.now(),
+    schedule_interval="@once",
     catchup=True,
     max_active_runs=3,
     tags=["aws", "gcp", "transfer", "zones"]
@@ -40,11 +40,15 @@ with DAG(
 
     for i, zone_file in enumerate(ZONE_BUCKET_FILES):
 
-        params["s3_file_path"] = s3_file = zone_file
+        s3_file = zone_file.replace(" ", "")
+
+        params["s3_file_path"] = zone_file
         params["csv_file"] = os.path.join(AirflowConfig.airflow_tmp, s3_file)
         params["parquet_file"] = params["csv_file"].replace(".csv", ".parquet")
         params["upload_file"] = params["parquet_file"]
-        params["gcp_object_name"] = os.path.join("raw", params["parquet_file"])
+        params["gcp_object_name"] = params["parquet_file"].replace(
+        AirflowConfig.airflow_tmp,  "raw"
+        )
 
         PythonOperator(
             task_id=f"s3_to_csv_zones_{i}",

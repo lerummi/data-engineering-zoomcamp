@@ -1,5 +1,6 @@
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
+from xml.dom.expatbuilder import FILTER_ACCEPT
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.models.param import Param
@@ -13,11 +14,8 @@ from functions import (
 
 default_args = {
     "owner": "airflow",
-    "start_date": datetime(2019, 1, 1),
-    "end_date": datetime(2021, 1, 1),
     "depends_on_past": False,
-    "retries": 1,
-    "schedule_interval": "@monthly"
+    "retries": 1
 }
 
 params = {
@@ -34,8 +32,11 @@ DATE_STRING = "{{ execution_date.strftime('%Y-%m') }}"
 with DAG(
     dag_id="trips_to_gcp",
     default_args=default_args,
+    schedule_interval="@monthly",
+    start_date=datetime(2019, 1, 1),
+    end_date=datetime(2020, 12, 1),
     catchup=True,
-    max_active_runs=3,
+    max_active_runs=2,
     params=params,
     tags=["aws", "gcp", "transfer", "trips"]
 ) as dag:
@@ -50,7 +51,9 @@ with DAG(
     params["csv_file"] = os.path.join(AirflowConfig.airflow_tmp, s3_file)
     params["parquet_file"] = params["csv_file"].replace(".csv", ".parquet")
     params["upload_file"] = params["parquet_file"]
-    params["gcp_object_name"] = os.path.join("raw", params["parquet_file"])
+    params["gcp_object_name"] = params["parquet_file"].replace(
+        AirflowConfig.airflow_tmp,  "raw"
+    )
 
     PythonOperator(
         task_id="s3_to_csv_trips",
@@ -67,6 +70,7 @@ with DAG(
         task_id="upload_to_gcs_trips",
         python_callable=upload_to_gcs,
         provide_context=True,
+        execution_timeout=timedelta(seconds=180),
         op_kwargs=params
     )
 
