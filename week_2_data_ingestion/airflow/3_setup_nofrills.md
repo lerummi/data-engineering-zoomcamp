@@ -54,7 +54,7 @@
 
 4. Copy [docker-compose-nofrills.yml](docker-compose-nofrills.yml), [.env_example](.env_example) & [entrypoint.sh](scripts/entrypoint.sh) from this repo.
     The changes from the official setup are:
-    * Removal of `redis` queue, `worker` & `triggerer` services, 
+    * Removal of `redis` queue, `worker`, `triggerer`, `flower` & `airflow-init` services, 
     and changing from `CeleryExecutor` mode to `LocalExecutor` mode 
     * Inclusion of `.env` for better parametrization & flexibility
     * Inclusion of simple `entrypoint.sh` to the `webserver` container, responsible to initialize the database and create login-user (admin).
@@ -64,8 +64,8 @@
         ```shell
         mv .env_example .env
         ```
-    * Set environment variables `AIRFLOW_UID`, `GCP_PROJECT_ID` & `GCP_GCS_BUCKET`, as per your setting.
-    * Optionally, if your `google-credentials.json` is stored somewhere else, eg. `~/.gc`, 
+    * Set environment variables `AIRFLOW_UID`, `GCP_PROJECT_ID` & `GCP_GCS_BUCKET`, as per your config.
+    * Optionally, if your `google-credentials.json` is stored somewhere else, such as a path like `$HOME/.gc`, 
     modify the env-vars (`GOOGLE_APPLICATION_CREDENTIALS`, `AIRFLOW_CONN_GOOGLE_CLOUD_DEFAULT`) and `volumes` path in `docker-compose-nofrills.yml`
 
 8. Here's how the final versions of your [Dockerfile](./Dockerfile) and [docker-compose-nofrills](./docker-compose-nofrills.yml) should look.
