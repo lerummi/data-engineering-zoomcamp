@@ -20,7 +20,7 @@ default_args = {
 
 params = {
     "dataset": Param(
-        default="yellow_tripdata",
+        default="fhv_tripdata",
         type="string",
         description="Root directory in S3 bucket to be processed"
     )
@@ -70,7 +70,7 @@ with DAG(
         task_id="upload_to_gcs_trips",
         python_callable=upload_to_gcs,
         provide_context=True,
-        execution_timeout=timedelta(seconds=180),
+        execution_timeout=timedelta(seconds=300),
         op_kwargs=params
     )
 
