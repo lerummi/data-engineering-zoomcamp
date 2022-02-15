@@ -3,7 +3,7 @@
 with fhv_data as (
     select *,
         'Fhv' as service_type
-    from ref {{ ref('stg_fhv_tripdata') }}
+    from {{ ref('stg_fhv_tripdata') }}
 ),
 
 dim_zones as (
@@ -13,6 +13,7 @@ dim_zones as (
 select 
     fhv_data.tripid, 
     fhv_data.dispatching_base_num,
+    fhv_data.service_type,
     fhv_data.pickup_datetime,
     fhv_data.dropoff_datetime,
     fhv_data.pickup_locationid,
