@@ -1,6 +1,7 @@
 ## Week 4 Homework - WIP
 
-[Form]() - To be published soon
+[Form](https://forms.gle/B5CXshja3MRbscVG8)
+
 We will use all the knowledge learned in this week. Please answer your questions via form above.
 
 - You can submit your homework multiple times. In this case, only the last submission will be used.
@@ -10,8 +11,8 @@ In this homework, we'll use the models developed during the week 4 videos and en
 
 We will use the data loaded for:
 
-- Building a source table
-- Building a fact table
+- Building a source table: stg_fhv_tripdata
+- Building a fact table: fact_fhv_trips
 - Create a dashboard
 
 If you don't have access to GCP, you can do this locally using the ingested data from your Postgres database
@@ -30,11 +31,11 @@ Answer:
 
 Run Query
 
-_SELECT count(\*) \
+_SELECT count(\*)
 FROM `river-howl-338521.production.fact_trips`
-WHERE pickup_datetime BETWEEN "2019-01-01" AND "2020-12-31"_
+WHERE pickup_datetime BETWEEN "2019-01-01" AND "2020-12-31 23:59:59.999999"_
 
-Result: In table `fact_trips` check out "Details" -> "Number of rows": 61,600,051
+Result: 61,635,322
 
 ---
 
@@ -48,9 +49,10 @@ Answer: It's 89.9 % "Yellow" vs 10.1 % "Green"
 
 ### Question 3:
 
-**What is the count of records in the model stg_fhv_tripdata after running all models with the test run variable disabled (:false)**  
-Create a staging model for the fhv data for 2019 keeping only records with entries for affiliated_base_number.
-Run it via the CLI without limits (is_test_run: false).
+**What is the count of records in the model stg_fhv_tripdata after running all models with the test run variable disabled (:false)**
+
+Create a staging model for the fhv data for 2019. Run it via the CLI without limits (is_test_run: false).
+Filter records with pickup time in year 2019.
 
 ---
 
@@ -67,10 +69,11 @@ Result: 46,275,630
 
 ### Question 4:
 
-**What is the count of records in the model fact_fhv_trips after running all dependencies with the test run variable disabled (:false)**  
+**What is the count of records in the model fact_fhv_trips after running all dependencies with the test run variable disabled (:false)**
+
 Create a core model for the stg_fhv_tripdata joining with dim_zones.
-Similar to what we've done in fact_trips, keep only records with knwon pickup and doproff locations entries for pickup and dropoff locations.
-Run it via the CLI without limits (is_test_run: false).
+Similar to what we've done in fact_trips, keep only records with known pickup and dropoff locations entries for pickup and dropoff locations.
+Run it via the CLI without limits (is_test_run: false) and filter records with pickup time in year 2019.
 
 ---
 
@@ -85,4 +88,13 @@ Result: 19,126,526
 
 ### Question 5:
 
-**TBD - Something about the dashboard**
+**What is the month with the biggest amount of rides after building a tile for the fact_fhv_trips table**
+Create a dashboard with some tiles that you find interesting to explore the data. One tile should show the amount of trips per month, as done in the videos for fact_trips, based on the fact_fhv_trips table.
+
+---
+
+Answer:
+
+It is January 2019.
+
+---

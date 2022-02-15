@@ -31,7 +31,7 @@ select
     cast(mta_tax as numeric) as mta_tax,
     cast(tip_amount as numeric) as tip_amount,
     cast(tolls_amount as numeric) as tolls_amount,
-    cast(ehail_fee as numeric) as ehail_fee,
+    cast(0 as numeric) as ehail_fee,
     cast(improvement_surcharge as numeric) as improvement_surcharge,
     cast(total_amount as numeric) as total_amount,
     cast(payment_type as integer) as payment_type,
@@ -42,8 +42,8 @@ where rn = 1
 
 
 -- dbt build --m <model.sql> --var 'is_test_run: false'
-{% if var('is_test_run', default=true) %}
+{% if var('is_test_run', default=false) %}
 
-  limit 100
+  limit 100000
 
 {% endif %}
