@@ -1,9 +1,9 @@
 {{ config(materialized='table') }}
 
-fhv_data as (
+with fhv_data as (
     select *,
         'Fhv' as service_type
-    from ref {{ ref('stg_fhv_tripdata')}}
+    from ref {{ ref('stg_fhv_tripdata') }}
 ),
 
 dim_zones as (
