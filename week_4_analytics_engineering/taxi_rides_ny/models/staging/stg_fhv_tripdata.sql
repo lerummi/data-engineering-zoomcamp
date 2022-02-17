@@ -2,7 +2,9 @@
  
 with tripdata as 
 (
-  select * from {{ source('staging','fhv_tripdata') }}
+  select * 
+  from {{ source('staging','fhv_tripdata') }} 
+  where pickup_datetime between "2019-01-01" and "2019-12-31 23:59:59.99999"
   --select *,
   --  row_number() over(partition by dispatching_base_num, pickup_datetime) as rn
   --from {{ source('staging','fhv_tripdata') }}
